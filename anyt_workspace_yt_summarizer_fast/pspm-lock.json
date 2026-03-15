@@ -1,0 +1,22 @@
+{
+  "$schema": "https://pspm.dev/schema/v1/pspm-lock.json",
+  "lockfileVersion": 3,
+  "registryUrl": "https://pspm.dev/api/skills",
+  "packages": {
+    "@user/anyt/youtube-downloader": {
+      "version": "0.3.0",
+      "resolved": "https://pspm.dev/api/skills/@user/anyt/youtube-downloader/versions/0.3.0/download",
+      "integrity": "sha256-E6qJPWSay/8uP+zeddqN6WR7xNRaJ/N0ZO+f/J86LTY="
+    },
+    "@github/jackwener/twitter-cli/twitter-cli": {
+      "version": "2026.3.14",
+      "resolved": "https://pspm.dev/api/skills/@github/jackwener/twitter-cli/twitter-cli/versions/2026.3.14/download",
+      "integrity": "sha256-eYm7MRuqOO9UUlAoKqBl0jKBxG37j6q+TGU0h7297Vw="
+    },
+    "@user/anyt/ebook": {
+      "version": "0.2.0",
+      "resolved": "https://pspm.dev/api/skills/@user/anyt/ebook/versions/0.2.0/download",
+      "integrity": "sha256-S9Cr7nsqDxKZJqPxi0H0wUTkN+NQ3g5lf2v+EDSiQns="
+    }
+  }
+}

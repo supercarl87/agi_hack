@@ -1,5 +1,4 @@
 # Ignore everything
-anyt_workspace*
 .DS_Store
 # Allow .anyt files
 .anyt

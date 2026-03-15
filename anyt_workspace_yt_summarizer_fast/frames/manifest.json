@@ -1,0 +1,105 @@
+{
+  "video_url": "https://www.youtube.com/watch?v=4uzGDAoNOZc",
+  "video_title": "OpenClaw Creator: Why 80% Of Apps Will Disappear",
+  "frames": [
+    {
+      "timestamp": 45.0,
+      "formatted_time": "0:45",
+      "file": "section_001.jpg",
+      "path": "frames/section_001.jpg",
+      "success": true,
+      "sectionId": 1,
+      "sectionTitle": "Introduction & OpenClaw's Viral Success"
+    },
+    {
+      "timestamp": 130.0,
+      "formatted_time": "2:10",
+      "file": "section_002.jpg",
+      "path": "frames/section_002.jpg",
+      "success": true,
+      "sectionId": 2,
+      "sectionTitle": "Why OpenClaw Took Off - Local vs Cloud"
+    },
+    {
+      "timestamp": 210.0,
+      "formatted_time": "3:30",
+      "file": "section_003.jpg",
+      "path": "frames/section_003.jpg",
+      "success": true,
+      "sectionId": 3,
+      "sectionTitle": "Bot-to-Bot & Multi-Agent Future"
+    },
+    {
+      "timestamp": 280.0,
+      "formatted_time": "4:40",
+      "file": "section_004.jpg",
+      "path": "frames/section_004.jpg",
+      "success": true,
+      "sectionId": 4,
+      "sectionTitle": "Swarm Intelligence vs God Intelligence"
+    },
+    {
+      "timestamp": 390.0,
+      "formatted_time": "6:30",
+      "file": "section_005.jpg",
+      "path": "frames/section_005.jpg",
+      "success": true,
+      "sectionId": 5,
+      "sectionTitle": "Peter's Aha Moment - The Origin Story"
+    },
+    {
+      "timestamp": 495.0,
+      "formatted_time": "8:15",
+      "file": "section_006.jpg",
+      "path": "frames/section_006.jpg",
+      "success": true,
+      "sectionId": 6,
+      "sectionTitle": "Building the First Prototype"
+    },
+    {
+      "timestamp": 565.0,
+      "formatted_time": "9:25",
+      "file": "section_007.jpg",
+      "path": "frames/section_007.jpg",
+      "success": true,
+      "sectionId": 7,
+      "sectionTitle": "The Voice Message Surprise"
+    },
+    {
+      "timestamp": 700.0,
+      "formatted_time": "11:40",
+      "file": "section_008.jpg",
+      "path": "frames/section_008.jpg",
+      "success": true,
+      "sectionId": 8,
+      "sectionTitle": "The Death of Apps & Model Commoditization"
+    },
+    {
+      "timestamp": 950.0,
+      "formatted_time": "15:50",
+      "file": "section_009.jpg",
+      "path": "frames/section_009.jpg",
+      "success": true,
+      "sectionId": 9,
+      "sectionTitle": "Data Ownership, Privacy & Memory"
+    },
+    {
+      "timestamp": 1200.0,
+      "formatted_time": "20:00",
+      "file": "section_010.jpg",
+      "path": "frames/section_010.jpg",
+      "success": true,
+      "sectionId": 10,
+      "sectionTitle": "Contrarian Development Philosophy"
+    },
+    {
+      "timestamp": 1330.0,
+      "formatted_time": "22:10",
+      "file": "section_011.jpg",
+      "path": "frames/section_011.jpg",
+      "success": true,
+      "sectionId": 11,
+      "sectionTitle": "Closing - Inspiration & Reflections"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "skills": {
+    "frontend-slides": {
+      "source": "zarazhangrui/frontend-slides",
+      "sourceType": "github",
+      "computedHash": "8525851ba95a4ad69345164d322aad4c8dd2eebfd85267428f9ed948e21051b2"
+    },
+    "twitter-cli": {
+      "source": "jackwener/twitter-cli",
+      "sourceType": "github",
+      "computedHash": "1e86ea8d37498386928ac09e68ed71704839ab54a7824d524201e9b1c5cf3168"
+    }
+  }
+}

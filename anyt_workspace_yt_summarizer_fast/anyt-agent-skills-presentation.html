@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnyT Notebook — Composable Agent Skills in Action</title>
+
+    <!-- Fonts: Syne for display, Space Mono for mono accents -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        /* ===========================================
+           CSS CUSTOM PROPERTIES (THEME)
+           Creative Voltage: Electric blue + neon yellow
+           =========================================== */
+        :root {
+            --bg-primary: #0066ff;
+            --bg-dark: #0a0e1a;
+            --bg-darker: #060910;
+            --accent-neon: #d4ff00;
+            --accent-cyan: #00e5ff;
+            --text-light: #ffffff;
+            --text-muted: #8b9cc7;
+            --text-on-blue: #c8dcff;
+
+            --font-display: 'Syne', sans-serif;
+            --font-mono: 'Space Mono', monospace;
+            --title-size: clamp(2rem, 6vw, 5rem);
+            --h2-size: clamp(1.4rem, 3.8vw, 3rem);
+            --h3-size: clamp(1rem, 2.5vw, 1.75rem);
+            --subtitle-size: clamp(0.875rem, 2vw, 1.25rem);
+            --body-size: clamp(0.75rem, 1.4vw, 1.1rem);
+            --small-size: clamp(0.65rem, 1vw, 0.875rem);
+            --slide-padding: clamp(1.5rem, 4vw, 4rem);
+            --content-gap: clamp(0.75rem, 2vw, 2rem);
+            --element-gap: clamp(0.25rem, 1vw, 1rem);
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+            --duration-normal: 0.6s;
+        }
+
+        /* ===========================================
+           RESET
+           =========================================== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        /* ===========================================
+           VIEWPORT FITTING: MANDATORY BASE STYLES
+           =========================================== */
+        html, body {
+            height: 100%;
+            overflow-x: hidden;
+        }
+        html {
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+        }
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh;
+            overflow: hidden;
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .slide-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            max-height: 100%;
+            overflow: hidden;
+            padding: var(--slide-padding);
+        }
+        .card, .container, .content-box {
+            max-width: min(90vw, 1000px);
+            max-height: min(80vh, 700px);
+        }
+        .feature-list, .bullet-list {
+            gap: clamp(0.4rem, 1vh, 1rem);
+        }
+        .feature-list li, .bullet-list li {
+            font-size: var(--body-size);
+            line-height: 1.4;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+            gap: clamp(0.5rem, 1.5vw, 1rem);
+        }
+        img, .image-container {
+            max-width: 100%;
+            max-height: min(50vh, 400px);
+            object-fit: contain;
+        }
+
+        /* Short viewports */
+        @media (max-height: 700px) {
+            :root {
+                --slide-padding: clamp(0.75rem, 3vw, 2rem);
+                --content-gap: clamp(0.4rem, 1.5vw, 1rem);
+                --title-size: clamp(1.25rem, 4.5vw, 2.5rem);
+                --h2-size: clamp(1rem, 3vw, 1.75rem);
+            }
+        }
+        @media (max-height: 600px) {
+            :root {
+                --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem);
+                --content-gap: clamp(0.3rem, 1vw, 0.75rem);
+                --title-size: clamp(1.1rem, 4vw, 2rem);
+                --body-size: clamp(0.7rem, 1.2vw, 0.95rem);
+            }
+            .nav-dots, .keyboard-hint, .decorative { display: none; }
+        }
+        @media (max-height: 500px) {
+            :root {
+                --slide-padding: clamp(0.4rem, 2vw, 1rem);
+                --title-size: clamp(1rem, 3.5vw, 1.5rem);
+                --h2-size: clamp(0.9rem, 2.5vw, 1.25rem);
+                --body-size: clamp(0.65rem, 1vw, 0.85rem);
+            }
+        }
+        @media (max-width: 600px) {
+            :root { --title-size: clamp(1.25rem, 7vw, 2.5rem); }
+            .grid { grid-template-columns: 1fr; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.2s !important;
+            }
+            html { scroll-behavior: auto; }
+        }
+
+        /* ===========================================
+           GLOBAL TYPOGRAPHY & BODY
+           =========================================== */
+        body {
+            font-family: var(--font-display);
+            color: var(--text-light);
+            background: var(--bg-darker);
+        }
+
+        /* ===========================================
+           SLIDE BACKGROUNDS
+           =========================================== */
+        .slide--dark {
+            background: var(--bg-dark);
+        }
+        .slide--blue {
+            background: var(--bg-primary);
+        }
+        .slide--split {
+            background: linear-gradient(90deg, var(--bg-primary) 50%, var(--bg-dark) 50%);
+        }
+        .slide--gradient {
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #0a1a3a 50%, var(--bg-dark) 100%);
+        }
+        .slide--neon {
+            background: var(--bg-darker);
+        }
+
+        /* Grid overlay for texture */
+        .grid-overlay::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+        }
+
+        /* ===========================================
+           ANIMATIONS
+           =========================================== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity var(--duration-normal) var(--ease-out-expo),
+                        transform var(--duration-normal) var(--ease-out-expo);
+        }
+        .slide.visible .reveal {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .reveal:nth-child(1) { transition-delay: 0.05s; }
+        .reveal:nth-child(2) { transition-delay: 0.15s; }
+        .reveal:nth-child(3) { transition-delay: 0.25s; }
+        .reveal:nth-child(4) { transition-delay: 0.35s; }
+        .reveal:nth-child(5) { transition-delay: 0.45s; }
+        .reveal:nth-child(6) { transition-delay: 0.55s; }
+        .reveal:nth-child(7) { transition-delay: 0.65s; }
+
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-40px);
+            transition: opacity 0.7s var(--ease-out-expo), transform 0.7s var(--ease-out-expo);
+        }
+        .slide.visible .reveal-left {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Neon glow pulse */
+        @keyframes glowPulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(212, 255, 0, 0.3), 0 0 40px rgba(212, 255, 0, 0.1); }
+            50% { box-shadow: 0 0 30px rgba(212, 255, 0, 0.5), 0 0 60px rgba(212, 255, 0, 0.2); }
+        }
+
+        /* Typing cursor blink */
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        /* Float animation for decorative elements */
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
+        }
+
+        /* ===========================================
+           TITLE SLIDE
+           =========================================== */
+        .title-slide {
+            background: var(--bg-darker);
+            position: relative;
+        }
+        .title-slide::before {
+            content: '';
+            position: absolute;
+            top: -20%;
+            right: -10%;
+            width: 60vw;
+            height: 60vw;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 102, 255, 0.25) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .title-slide::after {
+            content: '';
+            position: absolute;
+            bottom: -10%;
+            left: -5%;
+            width: 40vw;
+            height: 40vw;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(212, 255, 0, 0.1) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .title-slide .slide-content {
+            align-items: flex-start;
+            gap: var(--content-gap);
+            z-index: 1;
+        }
+        .title-badge {
+            display: inline-block;
+            font-family: var(--font-mono);
+            font-size: var(--small-size);
+            color: var(--accent-neon);
+            border: 1px solid var(--accent-neon);
+            padding: clamp(0.2rem, 0.5vw, 0.4rem) clamp(0.6rem, 1.5vw, 1.2rem);
+            border-radius: 4px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            animation: glowPulse 3s ease-in-out infinite;
+        }
+        .title-main {
+            font-size: var(--title-size);
+            font-weight: 800;
+            line-height: 1.05;
+            letter-spacing: -0.02em;
+            max-width: 85%;
+        }
+        .title-main .accent {
+            color: var(--accent-neon);
+        }
+        .title-sub {
+            font-family: var(--font-mono);
+            font-size: var(--subtitle-size);
+            color: var(--text-muted);
+            max-width: 70%;
+            line-height: 1.5;
+        }
+        .title-meta {
+            font-family: var(--font-mono);
+            font-size: var(--small-size);
+            color: var(--text-muted);
+            display: flex;
+            gap: clamp(1rem, 3vw, 3rem);
+            flex-wrap: wrap;
+        }
+        .title-meta span {
+            opacity: 0.7;
+        }
+
+        /* ===========================================
+           SECTION HEADINGS
+           =========================================== */
+        .section-number {
+            font-family: var(--font-mono);
+            font-size: var(--small-size);
+            color: var(--accent-neon);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: clamp(0.3rem, 0.5vw, 0.5rem);
+        }
+        .slide h2 {
+            font-size: var(--h2-size);
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+        }
+        .slide h3 {
+            font-size: var(--h3-size);
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        /* ===========================================
+           CONTENT COMPONENTS
+           =========================================== */
+
+        /* Neon badge pills */
+        .neon-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: clamp(0.3rem, 0.5vw, 0.5rem);
+            font-family: var(--font-mono);
+            font-size: var(--small-size);
+            color: var(--accent-neon);
+            background: rgba(212, 255, 0, 0.08);
+            border: 1px solid rgba(212, 255, 0, 0.3);
+            padding: clamp(0.15rem, 0.4vw, 0.3rem) clamp(0.5rem, 1vw, 0.8rem);
+            border-radius: 3px;
+        }
+
+        /* Feature cards */
+        .feature-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            padding: clamp(0.8rem, 2vw, 1.5rem);
+            transition: border-color 0.3s ease, background 0.3s ease;
+        }
+        .feature-card:hover {
+            border-color: rgba(212, 255, 0, 0.3);
+            background: rgba(255, 255, 255, 0.06);
+        }
+        .feature-card .card-icon {
+            font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+            margin-bottom: clamp(0.3rem, 0.5vw, 0.5rem);
+        }
+        .feature-card h4 {
+            font-size: clamp(0.85rem, 1.5vw, 1.1rem);
+            font-weight: 700;
+            margin-bottom: clamp(0.2rem, 0.3vw, 0.3rem);
+        }
+        .feature-card p {
+            font-size: var(--small-size);
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* Code blocks */
+        .code-block {
+            font-family: var(--font-mono);
+            font-size: clamp(0.6rem, 1.1vw, 0.9rem);
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 6px;
+            padding: clamp(0.6rem, 1.5vw, 1.2rem);
+            line-height: 1.6;
+            overflow: hidden;
+        }
+        .code-block .comment { color: #5c6370; }
+        .code-block .keyword { color: var(--accent-cyan); }
+        .code-block .string { color: var(--accent-neon); }
+        .code-block .cmd { color: #ff6b6b; }
+
+        /* Quote block */
+        .quote-block {
+            border-left: 3px solid var(--accent-neon);
+            padding-left: clamp(0.8rem, 2vw, 1.5rem);
+            font-size: clamp(0.9rem, 2vw, 1.4rem);
+            font-style: italic;
+            color: var(--text-on-blue);
+            line-height: 1.5;
+            max-width: 80%;
+        }
+
+        /* Comparison table */
+        .compare-row {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.5rem, 1.5vw, 1.5rem);
+            padding: clamp(0.3rem, 0.8vw, 0.6rem) 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            font-size: var(--body-size);
+        }
+        .compare-row:last-child { border-bottom: none; }
+        .compare-label {
+            flex: 0 0 clamp(80px, 15vw, 160px);
+            font-family: var(--font-mono);
+            font-size: var(--small-size);
+            color: var(--text-muted);
+        }
+        .compare-old {
+            flex: 1;
+            color: #ff6b6b;
+            text-decoration: line-through;
+            opacity: 0.6;
+        }
+        .compare-arrow {
+            color: var(--accent-neon);
+            font-size: var(--body-size);
+        }
+        .compare-new {
+            flex: 1;
+            color: var(--accent-neon);
+        }
+
+        /* Pipeline steps */
+        .pipeline {
+            display: flex;
+            flex-wrap: wrap;
+            gap: clamp(0.3rem, 0.8vw, 0.6rem);
+            align-items: center;
+        }
+        .pipeline-step {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.3rem, 0.5vw, 0.5rem);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            padding: clamp(0.3rem, 0.6vw, 0.5rem) clamp(0.5rem, 1vw, 0.8rem);
+            font-family: var(--font-mono);
+            font-size: var(--small-size);
+            transition: border-color 0.3s, background 0.3s;
+        }
+        .pipeline-step:hover {
+            border-color: var(--accent-neon);
+            background: rgba(212, 255, 0, 0.05);
+        }
+        .pipeline-step .step-type {
+            font-size: clamp(0.5rem, 0.8vw, 0.65rem);
+            padding: 1px 4px;
+            border-radius: 2px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 700;
+        }
+        .step-type--task { background: rgba(0, 102, 255, 0.3); color: #6ba3ff; }
+        .step-type--shell { background: rgba(212, 255, 0, 0.2); color: var(--accent-neon); }
+        .step-type--input { background: rgba(255, 107, 107, 0.2); color: #ff6b6b; }
+        .step-type--break { background: rgba(0, 229, 255, 0.2); color: var(--accent-cyan); }
+        .step-type--note { background: rgba(255, 255, 255, 0.1); color: #999; }
+        .pipeline-arrow {
+            color: var(--text-muted);
+            font-size: var(--small-size);
+            opacity: 0.4;
+        }
+
+        /* Cell type cards grid */
+        .cell-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+            gap: clamp(0.4rem, 1vw, 0.8rem);
+        }
+        .cell-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            padding: clamp(0.5rem, 1.2vw, 1rem);
+            text-align: center;
+            transition: transform 0.3s var(--ease-out-expo), border-color 0.3s;
+        }
+        .cell-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(212, 255, 0, 0.4);
+        }
+        .cell-card .cell-icon {
+            font-size: clamp(1.4rem, 3vw, 2.2rem);
+            margin-bottom: clamp(0.2rem, 0.3vw, 0.3rem);
+        }
+        .cell-card h4 {
+            font-size: clamp(0.8rem, 1.3vw, 1rem);
+            font-weight: 700;
+            margin-bottom: clamp(0.1rem, 0.2vw, 0.2rem);
+        }
+        .cell-card p {
+            font-size: clamp(0.6rem, 0.9vw, 0.75rem);
+            color: var(--text-muted);
+            line-height: 1.3;
+        }
+        .cell-card .cell-ai {
+            display: inline-block;
+            font-family: var(--font-mono);
+            font-size: clamp(0.5rem, 0.7vw, 0.6rem);
+            margin-top: clamp(0.2rem, 0.3vw, 0.3rem);
+            padding: 1px 6px;
+            border-radius: 3px;
+        }
+        .cell-ai--yes { background: rgba(0, 102, 255, 0.2); color: #6ba3ff; }
+        .cell-ai--no { background: rgba(255, 255, 255, 0.06); color: #888; }
+
+        /* Skill cards */
+        .skill-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+            gap: clamp(0.4rem, 1vw, 0.8rem);
+        }
+        .skill-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: clamp(0.6rem, 1.5vw, 1.2rem);
+            transition: border-color 0.3s, transform 0.3s var(--ease-out-expo);
+        }
+        .skill-card:hover {
+            border-color: var(--accent-neon);
+            transform: translateY(-2px);
+        }
+        .skill-card h4 {
+            font-size: clamp(0.8rem, 1.3vw, 1rem);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.3em;
+        }
+        .skill-card p {
+            font-size: var(--small-size);
+            color: var(--text-muted);
+            margin-top: clamp(0.15rem, 0.3vw, 0.3rem);
+            line-height: 1.3;
+        }
+
+        /* Output tree */
+        .output-tree {
+            font-family: var(--font-mono);
+            font-size: clamp(0.6rem, 1vw, 0.85rem);
+            line-height: 1.7;
+            color: var(--text-muted);
+        }
+        .output-tree .folder { color: var(--accent-cyan); }
+        .output-tree .file { color: var(--text-light); }
+        .output-tree .desc { color: #5c6370; }
+
+        /* Lifecycle steps */
+        .lifecycle {
+            display: flex;
+            flex-wrap: wrap;
+            gap: clamp(0.3rem, 0.8vw, 0.6rem);
+            align-items: stretch;
+        }
+        .lifecycle-step {
+            flex: 1;
+            min-width: clamp(100px, 14vw, 150px);
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            padding: clamp(0.5rem, 1.2vw, 1rem);
+            text-align: center;
+            position: relative;
+        }
+        .lifecycle-step .step-num {
+            font-family: var(--font-mono);
+            font-size: clamp(1.2rem, 2.5vw, 2rem);
+            font-weight: 700;
+            color: var(--accent-neon);
+            opacity: 0.3;
+        }
+        .lifecycle-step h4 {
+            font-size: clamp(0.75rem, 1.2vw, 0.95rem);
+            font-weight: 700;
+            margin: clamp(0.1rem, 0.2vw, 0.2rem) 0;
+        }
+        .lifecycle-step p {
+            font-size: clamp(0.55rem, 0.85vw, 0.7rem);
+            color: var(--text-muted);
+            line-height: 1.3;
+        }
+
+        /* Halftone decoration */
+        .halftone {
+            position: absolute;
+            width: clamp(100px, 20vw, 200px);
+            height: clamp(100px, 20vw, 200px);
+            opacity: 0.08;
+            background-image: radial-gradient(circle, var(--accent-neon) 1.5px, transparent 1.5px);
+            background-size: 8px 8px;
+            pointer-events: none;
+        }
+
+        /* ===========================================
+           PROGRESS BAR
+           =========================================== */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--bg-primary), var(--accent-neon));
+            z-index: 9999;
+            transition: width 0.3s ease;
+        }
+
+        /* ===========================================
+           NAVIGATION DOTS
+           =========================================== */
+        .nav-dots {
+            position: fixed;
+            right: clamp(0.5rem, 1.5vw, 1.5rem);
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: clamp(4px, 0.6vh, 8px);
+            z-index: 9998;
+        }
+        .nav-dot {
+            width: clamp(6px, 0.6vw, 8px);
+            height: clamp(6px, 0.6vw, 8px);
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+            padding: 0;
+        }
+        .nav-dot.active {
+            background: var(--accent-neon);
+            transform: scale(1.3);
+        }
+
+        /* ===========================================
+           KEYBOARD HINT
+           =========================================== */
+        .keyboard-hint {
+            position: fixed;
+            bottom: clamp(0.5rem, 1.5vw, 1.5rem);
+            right: clamp(0.5rem, 1.5vw, 1.5rem);
+            font-family: var(--font-mono);
+            font-size: clamp(0.5rem, 0.7vw, 0.65rem);
+            color: rgba(255, 255, 255, 0.2);
+            z-index: 9998;
+        }
+
+        /* ===========================================
+           SLIDE-SPECIFIC LAYOUTS
+           =========================================== */
+
+        /* Two-column layout */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: clamp(1rem, 3vw, 3rem);
+            align-items: start;
+        }
+        @media (max-width: 700px) {
+            .two-col { grid-template-columns: 1fr; }
+        }
+
+        /* Centered layout */
+        .centered {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        /* Spacer */
+        .gap { height: var(--content-gap); }
+        .gap-sm { height: var(--element-gap); }
+    </style>
+</head>
+<body>
+
+    <!-- Progress Bar -->
+    <div class="progress-bar" id="progressBar"></div>
+
+    <!-- Navigation Dots -->
+    <nav class="nav-dots" id="navDots" aria-label="Slide navigation"></nav>
+
+    <!-- Keyboard Hint -->
+    <div class="keyboard-hint" aria-hidden="true">← → Space</div>
+
+    <!-- ===========================================
+         SLIDE 1: TITLE
+         =========================================== -->
+    <section class="slide title-slide grid-overlay" aria-label="Title slide">
+        <div class="halftone" style="top: 10%; right: 5%;"></div>
+        <div class="slide-content">
+            <div class="title-badge reveal">AGI House · Agent Skill Build Day · Mar 14, 2026</div>
+            <h1 class="title-main reveal">
+                <span class="accent">AnyT Notebook</span><br>
+                Composable Agent Skills<br>in Action
+            </h1>
+            <p class="title-sub reveal">
+                How structured notebooks + a skill package manager turn AI agents into reliable, multi-step workflow engines.
+            </p>
+            <div class="title-meta reveal">
+                <span>youtube-video-summarizer-fast.anyt</span>
+                <span>4 skills composed</span>
+                <span>1 notebook → 5 outputs</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===========================================
+         SLIDE 2: THE PROBLEM
+         =========================================== -->
+    <section class="slide slide--gradient grid-overlay" aria-label="The Problem">
+        <div class="slide-content" style="gap: var(--content-gap);">
+            <div class="section-number reveal">01 — The Problem</div>
+            <h2 class="reveal">AI Agents Today Are <span style="color: #ff6b6b;">Chatbots</span></h2>
+            <div class="gap-sm"></div>
+            <div class="reveal" style="display: flex; flex-direction: column; gap: clamp(0.3rem, 0.8vw, 0.6rem);">
+                <div class="compare-row">
+                    <span class="compare-label">Visibility</span>
+                    <span class="compare-old">Can't see the plan before execution</span>
+                </div>
+                <div class="compare-row">
+                    <span class="compare-label">Control</span>
+                    <span class="compare-old">Can't pause and redirect mid-workflow</span>
+                </div>
+                <div class="compare-row">
+                    <span class="compare-label">Recovery</span>
+                    <span class="compare-old">Step 6 of 10 fails → start from scratch</span>
+                </div>
+                <div class="compare-row">
+                    <span class="compare-label">Separation</span>
+                    <span class="compare-old">AI used for everything, even deterministic tasks</span>
+                </div>
+                <div class="compare-row">
+                    <span class="compare-label">Sharing</span>
+                    <span class="compare-old">Copy-paste prompts. Every run is ephemeral</span>
+                </div>
+            </div>
+            <div class="gap-sm"></div>
+            <p class="reveal" style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--text-muted);">
+                Strong at narrow tool calls. Inconsistent across long horizons. Brittle under shifting context.
+            </p>
+        </div>
+    </section>
+
+    <!-- ===========================================
+         SLIDE 3: WHAT IS ANYT NOTEBOOK
+         =========================================== -->
+    <section class="slide slide--dark grid-overlay" aria-label="What is AnyT Notebook">
+        <div class="halftone" style="bottom: 5%; left: 3%;"></div>
+        <div class="slide-content" style="gap: var(--content-gap);">
+            <div class="section-number reveal">02 — The Solution</div>
+            <h2 class="reveal">AnyT Notebook: A <span style="color: var(--accent-neon);">Workflow Layer</span> for Agents</h2>
+            <div class="gap-sm"></div>
+            <div class="quote-block reveal">
+                "AnyT Notebook gives AI agents something they've never had: visible steps, human checkpoints, recoverable state, and a development lifecycle."
+            </div>
+            <div class="gap-sm"></div>
+            <div class="reveal" style="display: flex; flex-wrap: wrap; gap: clamp(0.4rem, 1vw, 0.8rem);">
+                <span class="neon-badge">Jupyter-style interface</span>
+                <span class="neon-badge">VS Code extension</span>
+                <span class="neon-badge">Plain-text .anyt files</span>
+                <span class="neon-badge">Git-friendly</span>
+                <span class="neon-badge">Multi-agent support</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===========================================
+         SLIDE 4: THE 5 CELL TYPES
+         =========================================== -->
+    <section class="slide slide--gradient grid-overlay" aria-label="Cell Types">
+        <div class="slide-content" style="gap: var(--content-gap);">
+            <div class="section-number reveal">03 — Building Blocks</div>
+            <h2 class="reveal">Five Cell Types. One Workflow.</h2>
+            <div class="gap-sm"></div>
+            <div class="cell-grid reveal">
+                <div class="cell-card">
+                    <div class="cell-icon">⚡</div>
+                    <h4>Task</h4>
+                    <p>AI executes natural-language instructions</p>
+                    <span class="cell-ai cell-ai--yes">AI ✓</span>
+                </div>
+                <div class="cell-card">
+                    <div class="cell-icon">▶</div>
+                    <h4>Shell</h4>
+                    <p>Runs scripts directly — no AI needed</p>
+                    <span class="cell-ai cell-ai--no">Deterministic</span>
+                </div>
+                <div class="cell-card">
+                    <div class="cell-icon">📋</div>
+                    <h4>Input</h4>
+                    <p>Collects structured user data via forms</p>
+                    <span class="cell-ai cell-ai--no">Pauses</span>
+                </div>
+                <div class="cell-card">
+                    <div class="cell-icon">⏸</div>
+                    <h4>Break</h4>
+                    <p>Human review checkpoint</p>
+                    <span class="cell-ai cell-ai--no">Pauses</span>
+                </div>
+                <div class="cell-card">
+                    <div class="cell-icon">📝</div>
+                    <h4>Note</h4>
+                    <p>Documentation and progress markers</p>
+                    <span class="cell-ai cell-ai--no">Info</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===========================================
+         SLIDE 5: WHAT IS PSPM
+         =========================================== -->
+    <section class="slide slide--dark grid-overlay" aria-label="PSPM">
+        <div class="halftone" style="top: 15%; right: 2%;"></div>
+        <div class="slide-content" style="gap: var(--content-gap);">
+            <div class="section-number reveal">04 — The Ecosystem</div>
+            <h2 class="reveal"><span style="color: var(--accent-neon);">PSPM</span> — npm for Agent Skills</h2>
+            <div class="gap-sm"></div>
+            <div class="two-col reveal">
+                <div>
+                    <p style="font-size: var(--body-size); color: var(--text-on-blue); line-height: 1.6; margin-bottom: var(--element-gap);">
+                        <strong>Prompt Skill Package Manager.</strong> Install, create, and share reusable skill packages that extend any AI agent.
+                    </p>
+                    <div style="display: flex; flex-wrap: wrap; gap: clamp(0.3rem, 0.5vw, 0.4rem);">
+                        <span class="neon-badge">30+ agents</span>
+                        <span class="neon-badge">Registry</span>
+                        <span class="neon-badge">GitHub install</span>
+                    </div>
+                </div>
+                <div class="code-block">
+                    <span class="comment"># Install a skill</span><br>
+                    <span class="cmd">pspm</span> <span class="keyword">add</span> <span class="string">@user/youtube-downloader</span><br><br>
+                    <span class="comment"># Skill is immediately available</span><br>
+                    <span class="comment"># No config needed — AI reads SKILL.md</span><br><br>
+                    <span class="cmd">pspm</span> <span class="keyword">list</span><br>
+                    <span style="color: var(--text-muted);">  youtube-downloader  1.0.0</span><br>
+                    <span style="color: var(--text-muted);">  ebook              1.0.0</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===========================================
+         SLIDE 6: THE DEMO — YT SUMMARIZER
+         =========================================== -->
+    <section class="slide slide--blue grid-overlay" aria-label="Demo intro">
+        <div class="slide-content centered" style="gap: var(--content-gap);">
+            <div class="section-number reveal" style="color: rgba(255,255,255,0.6);">05 — Live Demo</div>
+            <h2 class="reveal" style="max-width: 80%;">
+                YouTube Video Summarizer<br>
+                <span style="opacity: 0.6; font-size: 0.6em; font-weight: 400;">One notebook. Four skills. Five output formats.</span>
+            </h2>
+            <div class="gap-sm"></div>
+            <div class="code-block reveal" style="text-align: left; max-width: min(80%, 600px);">
+                <span class="comment"># Input</span><br>
+                <span style="color: var(--text-light);">YouTube URL</span> <span class="keyword">→</span> <span class="string">"OpenClaw Creator: Why 80% Of Apps Will Disappear"</span><br>
+                <span style="color: var(--text-light);">Language</span> <span class="keyword">&nbsp;&nbsp;&nbsp;→</span> <span class="string">English</span><br><br>
+                <span class="comment"># Outputs</span><br>
+                <span style="color: var(--text-light);">summary.md</span> · <span style="color: var(--text-light);">summary.epub</span> · <span style="color: var(--text-light);">X thread</span> · <span style="color: var(--text-light);">slides</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===========================================
+         SLIDE 7: THE PIPELINE
+         =========================================== -->
+    <section class="slide slide--dark grid-overlay" aria-label="Pipeline">
+        <div class="slide-content" style="gap: var(--content-gap);">
+            <div class="section-number reveal">06 — The Pipeline</div>
+            <h2 class="reveal">Notebook Cell-by-Cell Flow</h2>
+            <div class="gap-sm"></div>
+            <div class="pipeline reveal">
+                <div class="pipeline-step"><span class="step-type step-type--input">input</span> Video URL</div>
+                <span class="pipeline-arrow">→</span>
+                <div class="pipeline-step"><span class="step-type step-type--shell">shell</span> Install skill</div>
+                <span class="pipeline-arrow">→</span>
+                <div class="pipeline-step"><span class="step-type step-type--task">task</span> Transcript</div>
+                <span class="pipeline-arrow">→</span>
+                <div class="pipeline-step"><span class="step-type step-type--task">task</span> Analyze</div>
+                <span class="pipeline-arrow">→</span>
+                <div class="pipeline-step"><span class="step-type step-type--break">break</span> Review</div>
+                <span class="pipeline-arrow">→</span>
+                <div class="pipeline-step"><span class="step-type step-type--task">task</span> Screenshots</div>
+                <span class="pipeline-arrow">→</span>
+                <div class="pipeline-step"><span class="step-type step-type--task">task</span> Summarize</div>
+                <span class="pipeline-arrow">→</span>
+                <div class="pipeline-step"><span class="step-type step-type--break">break</span> Review</div>
+                <span class="pipeline-arrow">→</span>
+                <div class="pipeline-step"><span class="step-type step-type--task">task</span> Compile MD</div>
+            </div>
+            <div class="gap-sm"></div>
+            <div class="pipeline reveal">
+                <span class="pipeline-arrow" style="opacity: 0;">→</span>
+                <div class="pipeline-step" style="border-color: rgba(212, 255, 0, 0.3);"><span class="step-type step-type--shell">shell</span> +ebook skill</div>
+                <span class="pipeline-arrow">→</span>
+                <div class="pipeline-step" style="border-color: rgba(212, 255, 0, 0.3);"><span class="step-type step-type--task">task</span> Gen EPUB</div>
+                <span class="pipeline-arrow">→</span>
+                <div class="pipeline-step" style="border-color: rgba(212, 255, 0, 0.3);"><span class="step-type step-type--task">task</span> Post to X</div>
+                <span class="pipeline-arrow">→</span>
+                <div class="pipeline-step" style="border-color: rgba(212, 255, 0, 0.3);"><span class="step-type step-type--shell">shell</span> +slides skill</div>
+                <span class="pipeline-arrow">→</span>
+                <div class="pipeline-step" style="border-color: rgba(212, 255, 0, 0.3);"><span class="step-type step-type--task">task</span> This deck!</div>
+            </div>
+            <div class="gap-sm"></div>
+            <p class="reveal" style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--text-muted);">
+                17 cells · 4 skills installed at runtime · human review gates at critical points
+            </p>
+        </div>
+    </section>
+
+    <!-- ===========================================
+         SLIDE 8: SKILLS COMPOSED
+         =========================================== -->
+    <section class="slide slide--gradient grid-overlay" aria-label="Skills Used">
+        <div class="slide-content" style="gap: var(--content-gap);">
+            <div class="section-number reveal">07 — Skills Composed</div>
+            <h2 class="reveal">Four Skills, Installed On-the-Fly</h2>
+            <div class="gap-sm"></div>
+            <div class="skill-grid reveal">
+                <div class="skill-card">
+                    <h4>🎬 youtube-downloader</h4>
+                    <p>Transcripts, cover images, and frame screenshots — no video download needed</p>
+                </div>
+                <div class="skill-card">
+                    <h4>📚 ebook</h4>
+                    <p>Converts markdown to EPUB/PDF with proper formatting and chapters</p>
+                </div>
+                <div class="skill-card">
+                    <h4>🐦 twitter-cli</h4>
+                    <p>Post threads, attach images, reply chains — full X/Twitter integration</p>
+                </div>
+                <div class="skill-card">
+                    <h4>🎨 frontend-slides</h4>
+                    <p>Zero-dependency HTML presentations with animation and responsive design</p>
+                </div>
+            </div>
+            <div class="gap-sm"></div>
+            <div class="code-block reveal" style="max-width: min(90%, 700px);">
+                <span class="comment"># Each skill installed in a shell cell, used by task cells</span><br>
+                <span class="cmd">pspm</span> <span class="keyword">add</span> <span class="string">@user/anyt/youtube-downloader</span> <span class="comment"># → transcript + frames</span><br>
+                <span class="cmd">pspm</span> <span class="keyword">add</span> <span class="string">@user/anyt/ebook</span> <span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# → summary.epub</span><br>
+                <span class="cmd">npx skills</span> <span class="keyword">add</span> <span class="string">github.com/.../twitter-cli</span> <span class="comment">&nbsp;# → X thread</span><br>
+                <span class="cmd">npx skills</span> <span class="keyword">add</span> <span class="string">github.com/.../frontend-slides</span> <span class="comment"># → this deck</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===========================================
+         SLIDE 9: OUTPUTS GENERATED
+         =========================================== -->
+    <section class="slide slide--dark grid-overlay" aria-label="Outputs">
+        <div class="slide-content" style="gap: var(--content-gap);">
+            <div class="section-number reveal">08 — Outputs</div>
+            <h2 class="reveal">One Video In → <span style="color: var(--accent-neon);">Five Formats</span> Out</h2>
+            <div class="gap-sm"></div>
+            <div class="two-col reveal">
+                <div class="output-tree">
+                    <span class="folder">anyt_workspace/</span><br>
+                    ├── <span class="folder">transcripts/</span><br>
+                    │&nbsp;&nbsp; ├── <span class="file">video.json</span> <span class="desc">← 627 segments</span><br>
+                    │&nbsp;&nbsp; └── <span class="file">video.txt</span><br>
+                    ├── <span class="folder">cover/</span><br>
+                    │&nbsp;&nbsp; └── <span class="file">video.jpg</span><br>
+                    ├── <span class="folder">frames/</span><br>
+                    │&nbsp;&nbsp; ├── <span class="file">section_001…011.jpg</span> <span class="desc">← direct from stream</span><br>
+                    │&nbsp;&nbsp; └── <span class="file">manifest.json</span><br>
+                    ├── <span class="folder">summaries/</span><br>
+                    │&nbsp;&nbsp; ├── <span class="file">section_01…11.md</span><br>
+                    │&nbsp;&nbsp; └── <span class="file">all_summaries.json</span><br>
+                    ├── <span class="file" style="color: var(--accent-neon);">summary.md</span> <span class="desc">← final document</span><br>
+                    └── <span class="file" style="color: var(--accent-neon);">summary.epub</span> <span class="desc">← ebook</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: clamp(0.4rem, 1vw, 0.8rem);">
+                    <div class="feature-card">
+                        <div class="card-icon">📄</div>
+                        <h4>Structured Markdown</h4>
+                        <p>Cover image, TOC, 11 sections with frames, key takeaways</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="card-icon">📚</div>
+                        <h4>EPUB Ebook</h4>
+                        <p>Formatted chapters, ready for any e-reader</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="card-icon">🐦</div>
+                        <h4>X/Twitter Thread</h4>
+                        <p>3-tweet thread with key highlights posted live</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="card-icon">🎨</div>
+                        <h4>HTML Slides</h4>
+                        <p>This presentation — generated from the same workflow</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===========================================
+         SLIDE 10: WORKFLOW LIFECYCLE
+         =========================================== -->
+    <section class="slide slide--gradient grid-overlay" aria-label="Lifecycle">
+        <div class="slide-content" style="gap: var(--content-gap);">
+            <div class="section-number reveal">09 — The Lifecycle</div>
+            <h2 class="reveal">Workflows Are Software</h2>
+            <div class="gap-sm"></div>
+            <div class="lifecycle reveal">
+                <div class="lifecycle-step">
+                    <div class="step-num">1</div>
+                    <h4>Create</h4>
+                    <p>Add cells, build sequence, rough draft</p>
+                </div>
+                <div class="lifecycle-step">
+                    <div class="step-num">2</div>
+                    <h4>Debug</h4>
+                    <p>Add breaks, run & inspect, step through</p>
+                </div>
+                <div class="lifecycle-step">
+                    <div class="step-num">3</div>
+                    <h4>Iterate</h4>
+                    <p>Edit tasks, reorder, split, improve</p>
+                </div>
+                <div class="lifecycle-step">
+                    <div class="step-num">4</div>
+                    <h4>Harden</h4>
+                    <p>Remove breakpoints, minimal intervention</p>
+                </div>
+                <div class="lifecycle-step">
+                    <div class="step-num">5</div>
+                    <h4>Share</h4>
+                    <p>Check into git, share proven workflows</p>
+                </div>
+            </div>
+            <div class="gap-sm"></div>
+            <div class="quote-block reveal" style="max-width: 90%;">
+                "This lifecycle doesn't exist with chatbot-style AI agents. Every conversation is ephemeral. Every complex task starts from scratch. AnyT Notebook makes AI workflows durable, improvable, and shareable."
+            </div>
+        </div>
+    </section>
+
+    <!-- ===========================================
+         SLIDE 11: WHY THIS MATTERS FOR SKILL BUILDING
+         =========================================== -->
+    <section class="slide slide--dark grid-overlay" aria-label="Why it matters">
+        <div class="slide-content" style="gap: var(--content-gap);">
+            <div class="section-number reveal">10 — Composability</div>
+            <h2 class="reveal">Skills That <span style="color: var(--accent-neon);">Compose</span></h2>
+            <div class="gap-sm"></div>
+            <div class="two-col reveal">
+                <div style="display: flex; flex-direction: column; gap: var(--element-gap);">
+                    <div class="feature-card">
+                        <h4 style="color: var(--accent-neon);">Durability</h4>
+                        <p>Skills installed via PSPM persist. Notebook state survives restarts. Outputs are inspectable files.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 style="color: var(--accent-cyan);">Transfer</h4>
+                        <p>Same skill works across Claude Code, Codex, Gemini CLI, Cursor — 30+ agents.</p>
+                    </div>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: var(--element-gap);">
+                    <div class="feature-card">
+                        <h4 style="color: #ff6ba3;">Orchestration</h4>
+                        <p>Notebooks sequence skills with human checkpoints. Shell → Task → Break → Task.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 style="color: #ffaa6b;">Self-improvement</h4>
+                        <p>Debug → Iterate → Harden cycle. Workflows get better each run. Share proven patterns.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="gap-sm"></div>
+            <p class="reveal" style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--text-muted); text-align: center;">
+                The four tracks of today's build day — all addressed by a single architecture.
+            </p>
+        </div>
+    </section>
+
+    <!-- ===========================================
+         SLIDE 12: CLOSING
+         =========================================== -->
+    <section class="slide slide--neon grid-overlay" aria-label="Closing">
+        <div class="halftone" style="top: 5%; left: 5%;"></div>
+        <div class="halftone" style="bottom: 10%; right: 8%; transform: rotate(45deg);"></div>
+        <div class="slide-content centered" style="gap: var(--content-gap); z-index: 1;">
+            <div class="reveal" style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--accent-neon); letter-spacing: 0.15em; text-transform: uppercase;">
+                The goal is not theoretical progress
+            </div>
+            <h2 class="reveal" style="font-size: var(--title-size); max-width: 80%;">
+                It Is <span style="color: var(--accent-neon);">Usable Skill</span>.
+            </h2>
+            <div class="gap-sm"></div>
+            <div class="reveal" style="display: flex; flex-wrap: wrap; gap: clamp(0.4rem, 1vw, 0.8rem); justify-content: center;">
+                <span class="neon-badge" style="font-size: var(--body-size); padding: clamp(0.3rem, 0.6vw, 0.5rem) clamp(0.8rem, 1.5vw, 1.2rem);">AnyT Notebook</span>
+                <span class="neon-badge" style="font-size: var(--body-size); padding: clamp(0.3rem, 0.6vw, 0.5rem) clamp(0.8rem, 1.5vw, 1.2rem);">PSPM</span>
+                <span class="neon-badge" style="font-size: var(--body-size); padding: clamp(0.3rem, 0.6vw, 0.5rem) clamp(0.8rem, 1.5vw, 1.2rem);">Composable Skills</span>
+            </div>
+            <div class="gap"></div>
+            <p class="reveal" style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--text-muted);">
+                This presentation was generated by cell 16 of 17 in the youtube-video-summarizer-fast notebook.<br>
+                Built with the frontend-slides skill. No manual HTML.
+            </p>
+        </div>
+    </section>
+
+    <!-- ===========================================
+       SLIDE PRESENTATION CONTROLLER
+       =========================================== -->
+    <script>
+        class SlidePresentation {
+            constructor() {
+                this.slides = document.querySelectorAll('.slide');
+                this.currentSlide = 0;
+                this.isScrolling = false;
+                this.setupIntersectionObserver();
+                this.setupKeyboardNav();
+                this.setupTouchNav();
+                this.setupWheelNav();
+                this.setupProgressBar();
+                this.setupNavDots();
+            }
+
+            /* --- Intersection Observer: triggers .visible class --- */
+            setupIntersectionObserver() {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                            const idx = Array.from(this.slides).indexOf(entry.target);
+                            if (idx !== -1) {
+                                this.currentSlide = idx;
+                                this.updateNavDots();
+                                this.updateProgressBar();
+                            }
+                        }
+                    });
+                }, { threshold: 0.5 });
+
+                this.slides.forEach(slide => observer.observe(slide));
+            }
+
+            /* --- Keyboard navigation --- */
+            setupKeyboardNav() {
+                document.addEventListener('keydown', (e) => {
+                    switch(e.key) {
+                        case 'ArrowDown':
+                        case 'ArrowRight':
+                        case ' ':
+                        case 'PageDown':
+                            e.preventDefault();
+                            this.goToSlide(this.currentSlide + 1);
+                            break;
+                        case 'ArrowUp':
+                        case 'ArrowLeft':
+                        case 'PageUp':
+                            e.preventDefault();
+                            this.goToSlide(this.currentSlide - 1);
+                            break;
+                        case 'Home':
+                            e.preventDefault();
+                            this.goToSlide(0);
+                            break;
+                        case 'End':
+                            e.preventDefault();
+                            this.goToSlide(this.slides.length - 1);
+                            break;
+                    }
+                });
+            }
+
+            /* --- Touch/swipe support --- */
+            setupTouchNav() {
+                let startY = 0;
+                document.addEventListener('touchstart', (e) => {
+                    startY = e.touches[0].clientY;
+                }, { passive: true });
+                document.addEventListener('touchend', (e) => {
+                    const deltaY = startY - e.changedTouches[0].clientY;
+                    if (Math.abs(deltaY) > 50) {
+                        this.goToSlide(this.currentSlide + (deltaY > 0 ? 1 : -1));
+                    }
+                }, { passive: true });
+            }
+
+            /* --- Mouse wheel navigation --- */
+            setupWheelNav() {
+                let lastWheel = 0;
+                document.addEventListener('wheel', (e) => {
+                    const now = Date.now();
+                    if (now - lastWheel < 800) return;
+                    lastWheel = now;
+                    if (e.deltaY > 0) {
+                        this.goToSlide(this.currentSlide + 1);
+                    } else if (e.deltaY < 0) {
+                        this.goToSlide(this.currentSlide - 1);
+                    }
+                }, { passive: true });
+            }
+
+            /* --- Progress bar --- */
+            setupProgressBar() {
+                this.progressBar = document.getElementById('progressBar');
+                this.updateProgressBar();
+            }
+            updateProgressBar() {
+                if (!this.progressBar) return;
+                const pct = ((this.currentSlide + 1) / this.slides.length) * 100;
+                this.progressBar.style.width = pct + '%';
+            }
+
+            /* --- Navigation dots --- */
+            setupNavDots() {
+                const container = document.getElementById('navDots');
+                if (!container) return;
+                this.slides.forEach((_, i) => {
+                    const dot = document.createElement('button');
+                    dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
+                    dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
+                    dot.addEventListener('click', () => this.goToSlide(i));
+                    container.appendChild(dot);
+                });
+                this.dots = container.querySelectorAll('.nav-dot');
+            }
+            updateNavDots() {
+                if (!this.dots) return;
+                this.dots.forEach((dot, i) => {
+                    dot.classList.toggle('active', i === this.currentSlide);
+                });
+            }
+
+            /* --- Navigate to slide --- */
+            goToSlide(index) {
+                if (index < 0 || index >= this.slides.length) return;
+                this.currentSlide = index;
+                this.slides[index].scrollIntoView({ behavior: 'smooth' });
+                this.updateNavDots();
+                this.updateProgressBar();
+            }
+        }
+
+        /* Initialize on DOM ready */
+        document.addEventListener('DOMContentLoaded', () => {
+            new SlidePresentation();
+        });
+    </script>
+</body>
+</html>

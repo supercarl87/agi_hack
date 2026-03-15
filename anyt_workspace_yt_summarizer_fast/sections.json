@@ -1,0 +1,105 @@
+{
+  "videoTitle": "Peter Steinberger on OpenClaw: AI Agents and the Future of Software",
+  "totalDuration": 1353.3,
+  "sections": [
+    {
+      "id": 1,
+      "title": "Introduction & OpenClaw's Viral Success",
+      "startTime": 0,
+      "endTime": 96,
+      "keyTopics": ["OpenClaw introduction", "GitHub stars explosion", "community projects", "recent chaos"],
+      "frameTimestamp": 45,
+      "transcriptExcerpt": "Today I'm sitting down with Peter Steinberger, the creator of OpenClaw, the open-source personal AI agent that has completely taken over the internet. The GitHub repo exploded to over 160,000 stars practically overnight."
+    },
+    {
+      "id": 2,
+      "title": "Why OpenClaw Took Off - Local vs Cloud",
+      "startTime": 96,
+      "endTime": 172,
+      "keyTopics": ["running locally", "computer control", "full system access", "discovering forgotten data"],
+      "frameTimestamp": 130,
+      "transcriptExcerpt": "I think my big difference is that it actually runs on your computer. Like every everything I saw so far runs in the cloud. It's like it can do a few things if you run on your computer. It can do every effing thing, right?"
+    },
+    {
+      "id": 3,
+      "title": "Bot-to-Bot & Multi-Agent Future",
+      "startTime": 172,
+      "endTime": 250,
+      "keyTopics": ["bot interactions", "hiring humans", "specialized bots", "relationship management"],
+      "frameTimestamp": 210,
+      "transcriptExcerpt": "And so now you have, you know, we're even moving from human to bot. So like interactions and you've been talking about bot to bot interactions or even like bot to other humans where you know bots on behalf of you are then hiring other humans to accomplish tasks IRL."
+    },
+    {
+      "id": 4,
+      "title": "Swarm Intelligence vs God Intelligence",
+      "startTime": 250,
+      "endTime": 318,
+      "keyTopics": ["centralized intelligence", "swarm model", "specialization", "community intelligence"],
+      "frameTimestamp": 280,
+      "transcriptExcerpt": "It seems like everyone was chasing sort of like the centralized god intelligence and what has sort of emerged over the past you know 10 days or so is sort of like the swarm intelligence and the community intelligence."
+    },
+    {
+      "id": 5,
+      "title": "Peter's Aha Moment - The Origin Story",
+      "startTime": 318,
+      "endTime": 464,
+      "keyTopics": ["initial need", "typing commands", "November rebuild", "coding addiction"],
+      "frameTimestamp": 390,
+      "transcriptExcerpt": "I wanted something to like just type stuff so my computer would do stuff like very simple. And then I built a version of that in May, June that was cool but wasn't really it. And then in November, there was a day where I wanted this again."
+    },
+    {
+      "id": 6,
+      "title": "Building the First Prototype",
+      "startTime": 464,
+      "endTime": 523,
+      "keyTopics": ["WhatsApp integration", "Claude Code", "Marrakesh trip", "image support"],
+      "frameTimestamp": 495,
+      "transcriptExcerpt": "Literally it took me one hour for like the very shitty initial prototype. It was just a little bit of glue between like a dependency that connects WhatsApp and cloud code."
+    },
+    {
+      "id": 7,
+      "title": "The Voice Message Surprise",
+      "startTime": 523,
+      "endTime": 622,
+      "keyTopics": ["voice transcription", "creative problem solving", "ffmpeg", "OpenAI API", "emergent behavior"],
+      "frameTimestamp": 565,
+      "transcriptExcerpt": "I was walking and just like sending it a voice message and I'm like, 'Oh, wait. This can't work. I didn't build that.' And you saw like the type indicator. It's like blinking, blinking, blinking. 10 seconds later, it just replied to me."
+    },
+    {
+      "id": 8,
+      "title": "The Death of Apps & Model Commoditization",
+      "startTime": 622,
+      "endTime": 813,
+      "keyTopics": ["app obsolescence", "fitness tracking", "to-do apps", "model companies", "token usage"],
+      "frameTimestamp": 700,
+      "transcriptExcerpt": "Are apps just going to go away? I think 80% of them are going away. Why do I need My Fitness Pal? Like my agent already knows that I'm making bad decisions."
+    },
+    {
+      "id": 9,
+      "title": "Data Ownership, Privacy & Memory",
+      "startTime": 813,
+      "endTime": 1110,
+      "keyTopics": ["data silos", "markdown files", "personal memories", "soul.md", "Anthropic constitution"],
+      "frameTimestamp": 950,
+      "transcriptExcerpt": "The beauty of open claw is it kind of claws into the data because at the end user the end user needs access. Everyone owns their own memories as a bunch of markdown files on their own machines."
+    },
+    {
+      "id": 10,
+      "title": "Contrarian Development Philosophy",
+      "startTime": 1110,
+      "endTime": 1314,
+      "keyTopics": ["Codex vs Claude Code", "no work trees", "MCP alternatives", "CLI tools", "simplicity"],
+      "frameTimestamp": 1200,
+      "transcriptExcerpt": "I feel like the whole world does cloud code and I don't think I could have built the thing with cloud code. I love codex because it looks through way more files before it decides what to change."
+    },
+    {
+      "id": 11,
+      "title": "Closing - Inspiration & Reflections",
+      "startTime": 1314,
+      "endTime": 1353,
+      "keyTopics": ["mutual inspiration", "loner builder", "gratitude"],
+      "frameTimestamp": 1330,
+      "transcriptExcerpt": "Thank you so much for making the time to sit down chatting. has been a huge inspiration, too. I'm just like beyond stoked to see what's happening and of course they had to be sort of like a loner from some like tiny country like far away from Silicon Valley."
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "@user/anyt/youtube-downloader": "^0.3.0",
+    "@github/jackwener/twitter-cli/twitter-cli": "^2026.3.14",
+    "@user/anyt/ebook": "^0.2.0"
+  }
+}
