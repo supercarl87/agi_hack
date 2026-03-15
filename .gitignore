@@ -1,0 +1,8 @@
+# Ignore everything
+*
+
+# Allow .anyt files
+!*.anyt
+
+# Allow .gitignore itself
+!.gitignore
