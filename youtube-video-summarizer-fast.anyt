@@ -247,25 +247,25 @@ Create a polished markdown document combining section summaries and frame images
 npx skills add https://github.com/jackwener/twitter-cli -y
 </shell>
 
-<task id="task-y1cr" agent="codex">
+<task id="task-y1cr" label="Post X" agent="codex">
 post in x about this youtube summary in one x with replies use twitter-cli , and attach images
 </task>
 
-<shell id="shell-wtvp">
+<shell id="shell-wtvp" label="Install Ebook slides">
 pspm add @user/anyt/ebook
 </shell>
 
-<task id="task-xn4c" agent="gemini">
+<task id="task-xn4c" label="Generate Ebook" agent="gemini">
 use Ebook skill to generate ebook based on summary 
 
 &nbsp;
 </task>
 
-<shell id="shell-mcse">
+<shell id="shell-mcse" label="Install Slides skills">
 npx skills add https://github.com/zarazhangrui/frontend-slides --skill frontend-slides -y
 </shell>
 
-<task id="task-n8v9">
+<task id="task-n8v9" label="create slides">
 create frontend slides about anyt notebook, for the entire workflow of this task and pspm and notebook introduction is in /Users/bsheng/work/anyt-io/mintlify and this is for https://app.agihouse.org/events/Agent-Skill-Build-Day-20260314
 
 &nbsp;
